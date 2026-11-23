@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==============================================================================
+ * 2 BRAND COLORS (PRIMARY & COMPLEMENTARY SECONDARY)
+ * ==============================================================================
+ * 1. Primary:   #d90368 (Vibrant Berry Pink)
+ * 2. Secondary: #04a777 (Complementary Botanical Emerald Green)
+ * ============================================================================== */
+
+:root {
+  /* 2 Core Brand Colors */
+  --primary-color: #155d27;   /* 1st Primary Brand Color */
+  --secondary-color: #155d27; /* Complementary Secondary Color */
+
+  /* Active Brand Tokens */
+  --brand-primary: var(--primary-color);
+  --brand-secondary: var(--secondary-color);
+  --brand-accent: var(--secondary-color);
+  --brand-info: var(--secondary-color);
+
+  /* Neutrals & Status */
+  --brand-dark: #291720;
+  --brand-emerald: var(--secondary-color);
+
+  --background: #ffffff;
+  --foreground: #291720;
+}
+
+::selection {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: "Outfit", "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-brand {
+  font-family: "Cinzel", "Playfair Display", Georgia, serif;
+  letter-spacing: 0.06em;
+}
+
+.font-cinzel {
+  font-family: "Cinzel", Georgia, serif;
+}
+
+.font-playfair {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+.font-artisan {
+  font-family: "DM Serif Display", Georgia, serif;
+}
+
+/* ==============================================================================
+ * FULL-WIDTH SLIDING BAR (MARQUEE ANIMATIONS)
+ * ============================================================================== */
+@keyframes slide-right-to-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide-right-to-left {
+  animation: slide-right-to-left 28s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.animate-slide-right-to-left:hover {
+  animation-play-state: paused;
+}
+
+@keyframes slide-left-to-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-slide-left-to-right {
+  animation: slide-left-to-right 32s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.animate-slide-left-to-right:hover {
+  animation-play-state: paused;
+}
+
+/* ==============================================================================
+ * HIDE NEXT.JS DEVELOPMENT INDICATORS (Static route badge at bottom-left)
+ * ============================================================================== */
+nextjs-portal,
+[data-nextjs-toast],
+#__next-build-watcher {
+  display: none !important;
+}
+
+
