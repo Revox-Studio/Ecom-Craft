@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { UploadCloud, X, Star, AlertCircle, Loader2 } from "lucide-react";
+import { getPublicImageUrl } from "@/lib/s3";
 
 interface ImageUploadProps {
   images: string[];
@@ -127,7 +128,7 @@ export default function ImageUpload({
             className="group relative aspect-square rounded-2xl overflow-hidden border border-brand-dark/15 bg-brand-dark/5 shadow-sm"
           >
             <img
-              src={url}
+              src={getPublicImageUrl(url)}
               alt={`Product preview ${idx + 1}`}
               className="w-full h-full object-cover"
             />

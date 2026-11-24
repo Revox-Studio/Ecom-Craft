@@ -1,7 +1,22 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Shop by Category | Handcrafted Collections",
+  description:
+    "Explore our 5 permanent handcrafted crochet collections: Winter Knits, Deity Poshak & Laddu Gopal dresses, Amigurumi character dolls, Keychain charms, and Everlasting floral bouquets.",
+  alternates: {
+    canonical: "/categories",
+  },
+  openGraph: {
+    title: "Shop Handcrafted Collections by Category | Crochet Cradle",
+    description:
+      "Explore our 5 permanent handcrafted crochet collections: Winter Knits, Deity Poshak, Amigurumi character dolls, Keychain charms, and Everlasting flower bouquets.",
+  },
+};
 
 interface CategoryBanner {
   id: string;

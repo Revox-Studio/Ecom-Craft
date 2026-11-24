@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { brandConfig } from "@/config/brand";
+import { getPublicImageUrl } from "@/lib/s3";
 import {
   Package,
   Sparkles,
@@ -158,7 +159,7 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               recentProducts.map((p) => {
-                const coverImage = p.images && p.images[0] ? p.images[0] : null;
+                const coverImage = p.images && p.images[0] ? getPublicImageUrl(p.images[0]) : null;
                 const specs = (p.specifications as Record<string, any>) || {};
 
                 return (

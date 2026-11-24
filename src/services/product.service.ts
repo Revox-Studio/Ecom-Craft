@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { Product } from "@/types/product";
-import { deleteMultipleImagesFromS3 } from "@/lib/s3";
+import { deleteMultipleImagesFromS3, getPublicImageUrl } from "@/lib/s3";
 
 export const fallbackProducts: Product[] = [
   {
@@ -156,17 +156,41 @@ export const productService = {
         orderBy,
       });
 
-      if (products.length === 0) return fallbackProducts;
+      if (products.length === 0) {
+        let list = [...fallbackProducts];
+        if (params?.category && params.category !== "All Crafts") {
+          const cat = params.category.toLowerCase();
+          list = list.filter(
+            (p) =>
+              p.category.toLowerCase().includes(cat) ||
+              cat.includes(p.category.toLowerCase())
+          );
+        }
+        if (params?.search) {
+          const s = params.search.toLowerCase();
+          list = list.filter(
+            (p) =>
+              p.name.toLowerCase().includes(s) ||
+              p.description.toLowerCase().includes(s)
+          );
+        }
+        return list;
+      }
 
       return products.map((p) => {
         const specs = (p.specifications as Record<string, any>) || {};
+        const safeImages =
+          p.images && p.images.length > 0
+            ? p.images.map(getPublicImageUrl)
+            : ["/images/categories/winter-crochet.webp"];
+
         return {
           id: p.id,
           name: p.name,
           slug: p.slug,
           description: p.description,
           category: p.category,
-          images: p.images.length > 0 ? p.images : ["/images/categories/winter-crochet.webp"],
+          images: safeImages,
           featured: p.featured,
           price: specs.price || "₹599",
           originalPrice: specs.originalPrice || "₹799",
@@ -180,29 +204,63 @@ export const productService = {
       });
     } catch (error) {
       console.error("Error fetching products:", error);
-      return fallbackProducts;
+      let list = [...fallbackProducts];
+      if (params?.category && params.category !== "All Crafts") {
+        const cat = params.category.toLowerCase();
+        list = list.filter(
+          (p) =>
+            p.category.toLowerCase().includes(cat) ||
+            cat.includes(p.category.toLowerCase())
+        );
+      }
+      if (params?.search) {
+        const s = params.search.toLowerCase();
+        list = list.filter(
+          (p) =>
+            p.name.toLowerCase().includes(s) ||
+            p.description.toLowerCase().includes(s)
+        );
+      }
+      return list;
     }
   },
 
   async getFeatured(): Promise<Product[]> {
     try {
-      const products = await db.product.findMany({
+      // First try to fetch products marked as featured
+      let products = await db.product.findMany({
         where: { featured: true },
         take: 8,
         orderBy: { createdAt: "desc" },
       });
 
-      if (products.length === 0) return fallbackProducts;
+      // If no product is explicitly marked featured, display real products from DB
+      if (products.length === 0) {
+        products = await db.product.findMany({
+          take: 8,
+          orderBy: { createdAt: "desc" },
+        });
+      }
+
+      // If database has no products, return fallback featured products
+      if (products.length === 0) {
+        return fallbackProducts.filter((p) => p.featured);
+      }
 
       return products.map((p) => {
         const specs = (p.specifications as Record<string, any>) || {};
+        const safeImages =
+          p.images && p.images.length > 0
+            ? p.images.map(getPublicImageUrl)
+            : ["/images/categories/winter-crochet.webp"];
+
         return {
           id: p.id,
           name: p.name,
           slug: p.slug,
           description: p.description,
           category: p.category,
-          images: p.images.length > 0 ? p.images : ["/images/categories/winter-crochet.webp"],
+          images: safeImages,
           featured: p.featured,
           price: specs.price || "₹599",
           originalPrice: specs.originalPrice || "₹799",
@@ -216,7 +274,7 @@ export const productService = {
       });
     } catch (error) {
       console.error("Error fetching featured products:", error);
-      return fallbackProducts;
+      return fallbackProducts.filter((p) => p.featured);
     }
   },
 
@@ -232,13 +290,18 @@ export const productService = {
       }
 
       const specs = (p.specifications as Record<string, any>) || {};
+      const safeImages =
+        p.images && p.images.length > 0
+          ? p.images.map(getPublicImageUrl)
+          : ["/images/categories/winter-crochet.webp"];
+
       return {
         id: p.id,
         name: p.name,
         slug: p.slug,
         description: p.description,
         category: p.category,
-        images: p.images,
+        images: safeImages,
         featured: p.featured,
         price: specs.price || "₹599",
         originalPrice: specs.originalPrice || "₹799",
@@ -265,13 +328,18 @@ export const productService = {
       }
 
       const specs = (p.specifications as Record<string, any>) || {};
+      const safeImages =
+        p.images && p.images.length > 0
+          ? p.images.map(getPublicImageUrl)
+          : ["/images/categories/winter-crochet.webp"];
+
       return {
         id: p.id,
         name: p.name,
         slug: p.slug,
         description: p.description,
         category: p.category,
-        images: p.images,
+        images: safeImages,
         featured: p.featured,
         price: specs.price || "₹599",
         originalPrice: specs.originalPrice || "₹799",
@@ -318,13 +386,18 @@ export const productService = {
         },
       });
 
+      const safeImages =
+        p.images && p.images.length > 0
+          ? p.images.map(getPublicImageUrl)
+          : [];
+
       return {
         id: p.id,
         name: p.name,
         slug: p.slug,
         description: p.description,
         category: p.category,
-        images: p.images,
+        images: safeImages,
         featured: p.featured,
         price: specs.price || "₹599",
         originalPrice: specs.originalPrice || "₹799",
@@ -394,13 +467,18 @@ export const productService = {
         data: updatePayload,
       });
 
+      const safeImages =
+        p.images && p.images.length > 0
+          ? p.images.map(getPublicImageUrl)
+          : [];
+
       return {
         id: p.id,
         name: p.name,
         slug: p.slug,
         description: p.description,
         category: p.category,
-        images: p.images,
+        images: safeImages,
         featured: p.featured,
         price: updatedSpecs.price || "₹599",
         originalPrice: updatedSpecs.originalPrice || "₹799",

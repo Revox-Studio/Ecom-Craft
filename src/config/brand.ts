@@ -8,10 +8,31 @@
 
 export const brandConfig = {
   // Brand Name (Rendered as text with no icon in Navbar)
-  name: "ZARA",
+  name: "crochet cradle",
+
+  // Canonical Site URL
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://crochetcradle.in",
 
   // Short Tagline / Slogan
   tagline: "Handcrafted Artisan Wool & Crochet Creations",
+
+  // SEO Keywords
+  keywords: [
+    "crochet cradle",
+    "crochet",
+    "handcrafted crochet",
+    "deity poshak",
+    "laddu gopal dress",
+    "laddu gopal woolen poshak",
+    "amigurumi dolls",
+    "crochet toys",
+    "crochet flower bouquets",
+    "forever flowers",
+    "crochet keychains",
+    "winter crochet",
+    "wool crafts",
+    "handmade gifts India",
+  ],
 
   // Full-width Sliding Bar Text (Sliding left-to-right below Hero section)
   slidingBarText:
@@ -59,16 +80,16 @@ export const brandConfig = {
 
   // Contact Details & Phone Support
   contact: {
-    phone: "+91 6294178990",
-    email: "sujoygarai89@gamil.com",
+    phone: "+91 62960 02276",
+    email: "rohansaha636@gmail.com",
     address: "Studio Workshop, Craft District",
   },
 
   // Social Media Links (Facebook, Instagram, YouTube)
   socialLinks: {
-    facebook: "https://facebook.com/woolcarft",
-    instagram: "https://instagram.com/woolcarft",
-    youtube: "https://youtube.com/@woolcarft",
+    facebook: "https://www.facebook.com/share/1Kc3TTCPGB/",
+    instagram: "https://www.instagram.com/crochetcradle.in?bqrl=dGxpY3F2bWd0ZG90",
+    youtube: "https://youtube.com/",
   },
 
   // Pre-made Fixed Categories with actual uploaded images

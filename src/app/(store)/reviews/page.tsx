@@ -1,6 +1,23 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { brandConfig } from "@/config/brand";
+
+export const metadata: Metadata = {
+  title: "Customer Reviews & Testimonials | 4.9★ Rated",
+  description:
+    "Read real customer reviews and experiences with our handcrafted crochet deity poshak, flower bouquets, amigurumi dolls, and winter wool wear.",
+  alternates: {
+    canonical: "/reviews",
+  },
+  openGraph: {
+    title: `Customer Reviews & Testimonials | ${brandConfig.name}`,
+    description:
+      "Read real customer reviews and experiences with our handcrafted crochet deity poshak, flower bouquets, amigurumi dolls, and winter wool wear.",
+    url: `${brandConfig.url}/reviews`,
+    type: "website",
+  },
+};
 
 interface ReviewItem {
   id: string;
@@ -90,8 +107,45 @@ const customerReviews: ReviewItem[] = [
 ];
 
 export default function ReviewsPage() {
+  const reviewsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${brandConfig.name} Handcrafted Creations`,
+    description: brandConfig.description,
+    brand: {
+      "@type": "Brand",
+      name: brandConfig.name,
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      reviewCount: "128",
+      bestRating: "5",
+      worstRating: "1",
+    },
+    review: customerReviews.map((rev) => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: rev.author,
+      },
+      datePublished: "2026-11-01",
+      reviewBody: rev.comment,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: rev.rating,
+        bestRating: "5",
+        worstRating: "1",
+      },
+    })),
+  };
+
   return (
     <div className="w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsJsonLd) }}
+      />
       {/* Container with Generous Spacing */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
         

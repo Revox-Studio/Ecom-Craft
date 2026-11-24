@@ -19,6 +19,7 @@ import {
   Package,
 } from "lucide-react";
 import { brandConfig } from "@/config/brand";
+import { getPublicImageUrl } from "@/lib/s3";
 
 interface ProductTableProps {
   initialProducts: Product[];
@@ -175,7 +176,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
                 </tr>
               ) : (
                 filteredProducts.map((p) => {
-                  const coverImage = p.images && p.images.length > 0 ? p.images[0] : null;
+                  const coverImage = p.images && p.images.length > 0 ? getPublicImageUrl(p.images[0]) : null;
                   const hasS3Images = p.images && p.images.some((img) => !img.startsWith("/images/"));
 
                   return (
@@ -313,7 +314,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
             <div className="p-3.5 rounded-2xl bg-brand-dark/5 border border-brand-dark/10 flex items-center gap-3">
               {productToDelete.images?.[0] && (
                 <img
-                  src={productToDelete.images[0]}
+                  src={getPublicImageUrl(productToDelete.images[0])}
                   alt=""
                   className="w-12 h-12 object-cover rounded-xl"
                 />

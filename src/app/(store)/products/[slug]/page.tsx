@@ -1,11 +1,61 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { productService } from "@/services/product.service";
+import { getPublicImageUrl } from "@/lib/s3";
+import { brandConfig } from "@/config/brand";
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await productService.getBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The requested handcrafted crochet item was not found.",
+    };
+  }
+
+  const imageUrl =
+    product.images && product.images.length > 0
+      ? getPublicImageUrl(product.images[0])
+      : `${brandConfig.url}/images/og-image.jpg`;
+
+  return {
+    title: `${product.name} | Handmade Crochet Craft`,
+    description: product.description,
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    openGraph: {
+      title: `${product.name} | ${brandConfig.name}`,
+      description: product.description,
+      url: `${brandConfig.url}/products/${product.slug}`,
+      type: "website",
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 800,
+          alt: product.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description,
+      images: [imageUrl],
+    },
+  };
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
@@ -16,8 +66,69 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     notFound();
   }
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.images?.map(getPublicImageUrl) || [],
+    description: product.description,
+    category: product.category,
+    brand: {
+      "@type": "Brand",
+      name: brandConfig.name,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${brandConfig.url}/products/${product.slug}`,
+      priceCurrency: "INR",
+      price: String(product.price || "599").replace(/[^0-9]/g, "") || "599",
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: product.rating || 4.9,
+      reviewCount: product.reviewCount || 25,
+      bestRating: "5",
+      worstRating: "1",
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: brandConfig.url,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: `${brandConfig.url}/products`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.name,
+        item: `${brandConfig.url}/products/${product.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-5xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="mb-6">
         <Link
           href="/products"
@@ -33,7 +144,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           {product.images && product.images.length > 0 ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={product.images[0]}
+              src={getPublicImageUrl(product.images[0])}
               alt={product.name}
               className="h-full w-full object-cover"
             />

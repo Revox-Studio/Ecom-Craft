@@ -1,12 +1,25 @@
 import React from "react";
+import type { Metadata } from "next";
 import { brandConfig } from "@/config/brand";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us | Our Story & Handcrafted Passion",
+  description: `Learn about ${brandConfig.name} - our passion for artisanal crochet creations, export-grade wool yarns, and heartfelt hand-knitted toys, deity poshak, and everlasting flower bouquets.`,
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: `About Us | ${brandConfig.name.toUpperCase()}`,
+    description: `Learn about ${brandConfig.name} - our passion for artisanal crochet creations, export-grade wool yarns, and heartfelt hand-knitted creations.`,
+  },
+};
 
 export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12">
       <div className="text-center space-y-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
+        <span className="text-xs font-bold uppercase tracking-wider text-brand-secondary">
           Our Story & Craftsmanship
         </span>
         <h1 className="text-3xl sm:text-4xl font-black text-brand-dark">
@@ -18,7 +31,7 @@ export default function AboutPage() {
       </div>
 
       <div className="bg-white rounded-3xl border border-gray-100 p-8 sm:p-10 shadow-xs space-y-6">
-        <h2 className="text-xl font-bold text-brand-dark">Artisan Wool Creations</h2>
+        <h2 className="text-xl font-bold text-brand-dark">crochetcradle.in</h2>
         <p className="text-sm text-brand-dark/70 leading-relaxed">
           {brandConfig.description}
         </p>

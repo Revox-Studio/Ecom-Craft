@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import ProductCard from "@/components/store/product/product-card";
 import { productService } from "@/services/product.service";
 import { brandConfig } from "@/config/brand";
+
+export const metadata: Metadata = {
+  title: "All Handcrafted Crochet Products & Catalog",
+  description:
+    "Browse our complete catalog of handcrafted crochet items: deity poshak, amigurumi dolls, forever flower bouquets, cute keychains, and winter knitwear.",
+  alternates: {
+    canonical: "/products",
+  },
+  openGraph: {
+    title: `All Handcrafted Crochet Products | ${brandConfig.name}`,
+    description:
+      "Browse our complete catalog of handcrafted crochet items: deity poshak, amigurumi dolls, forever flower bouquets, cute keychains, and winter knitwear.",
+    url: `${brandConfig.url}/products`,
+    type: "website",
+  },
+};
 
 interface ProductsPageProps {
   searchParams: Promise<{ category?: string; search?: string; sort?: string }>;

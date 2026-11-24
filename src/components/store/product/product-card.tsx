@@ -1,28 +1,26 @@
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { Product } from "@/types/product";
+import { getPublicImageUrl } from "@/lib/s3";
 
 interface ProductCardProps {
   product?: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const item: Product = product || {
-    id: "sample-1",
-    name: "Cozy Snowman Wool Beanie",
-    slug: "cozy-snowman-wool-beanie",
-    description: "Handcrafted winter crochet beanie",
-    category: "Winter Crochet",
-    images: ["/images/categories/winter-crochet.webp"],
-    price: "₹599",
-    originalPrice: "₹799",
-    rating: 4.9,
-    reviewCount: 38,
-  };
+  const [imageError, setImageError] = useState(false);
+
+  if (!product) return null;
+
+  const item: Product = product;
+  const rawImage = item.images && item.images.length > 0 ? item.images[0] : null;
+  const displayImage = rawImage ? getPublicImageUrl(rawImage) : null;
 
   const price = item.price || "₹599";
   const originalPrice = item.originalPrice || "₹799";
   const rating = item.rating || 4.9;
-  const reviewCount = item.reviewCount || 28;
 
   return (
     <Link
@@ -30,25 +28,23 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-100 bg-white p-3.5 sm:p-4 shadow-xs hover:border-gray-200 hover:shadow-lg transition-all duration-300"
     >
       <div>
-        {/* Top Row: Left side Category Badge | Right side Nothing */}
+        {/* Top Row: Left side Category Badge */}
         <div className="flex items-center justify-between mb-1.5">
-          {/* Top Left: Category Badge */}
           <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-brand-primary">
             <span>🏷️</span>
             <span className="line-clamp-1">{item.category}</span>
           </span>
-
-          {/* Top Right: Nothing */}
           <div aria-hidden="true" />
         </div>
 
         {/* Center: Product Image */}
         <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-50/70 p-3 flex items-center justify-center my-2">
-          {item.images && item.images.length > 0 ? (
+          {displayImage && !imageError ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={item.images[0]}
+              src={displayImage}
               alt={item.name}
+              onError={() => setImageError(true)}
               className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
@@ -84,9 +80,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* Bottom Row: Replaces 2 Buttons with Star Review Rating */}
+      {/* Bottom Row: Star Review Rating */}
       <div className="mt-3.5 pt-3 border-t border-gray-100 flex items-center justify-center gap-1.5">
-        {/* 5 Golden Stars */}
         <div className="flex items-center text-amber-400 gap-0.5">
           {[1, 2, 3, 4, 5].map((star) => (
             <svg
@@ -99,7 +94,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           ))}
         </div>
 
-        {/* Rating Score */}
         <span className="text-xs font-bold text-gray-800">
           {typeof rating === "number" ? rating.toFixed(1) : rating}
         </span>
