@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { productService } from "@/services/product.service";
-import { getPublicImageUrl } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 import { brandConfig } from "@/config/brand";
 
 interface ProductDetailPageProps {

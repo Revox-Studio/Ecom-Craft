@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { UploadCloud, X, Star, AlertCircle, Loader2 } from "lucide-react";
-import { getPublicImageUrl } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 
 interface ImageUploadProps {
   images: string[];

@@ -19,7 +19,7 @@ import {
   Package,
 } from "lucide-react";
 import { brandConfig } from "@/config/brand";
-import { getPublicImageUrl } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 
 interface ProductTableProps {
   initialProducts: Product[];

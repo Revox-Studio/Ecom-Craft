@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { Product } from "@/types/product";
-import { deleteMultipleImagesFromS3, getPublicImageUrl } from "@/lib/s3";
+import { deleteMultipleImagesFromS3 } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 
 export const fallbackProducts: Product[] = [
   {

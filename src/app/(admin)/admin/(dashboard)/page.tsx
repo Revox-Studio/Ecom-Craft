@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { brandConfig } from "@/config/brand";
-import { getPublicImageUrl } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 import {
   Package,
   Sparkles,

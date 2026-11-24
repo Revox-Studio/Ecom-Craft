@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Product } from "@/types/product";
-import { getPublicImageUrl } from "@/lib/s3";
+import { getPublicImageUrl } from "@/lib/image-url";
 
 interface ProductCardProps {
   product?: Product;
